@@ -1,0 +1,15 @@
+# Clone cat command
+
+```bash
+$ cargo run -- tests/inputs/the-bustle.txt
+
+The bustle in a house
+The morning after death
+Is solemnest of industries
+Enacted upon earth,—
+
+The sweeping up the heart,
+And putting love away
+We shall not want to use again
+Until eternity.
+```

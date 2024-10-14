@@ -1,9 +1,7 @@
 use clap::Parser;
-use std::{
-    error::Error,
-    fs::File,
-    io::{self, BufRead, BufReader},
-};
+use std::error::Error;
+use std::fs::File;
+use std::io::{self, BufRead, BufReader};
 
 type MyResult<T> = Result<T, Box<dyn Error>>;
 

@@ -30,7 +30,7 @@ pub struct Config {
 
 impl Config {
     pub fn get_args() -> MyResult<Self> {
-        let mut config = Config::parse();
+        let mut config = Self::parse();
         if [config.lines, config.words, config.bytes, config.chars]
             .iter()
             .all(|v| v == &false)

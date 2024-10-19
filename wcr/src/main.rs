@@ -1,5 +1,7 @@
+use wcr::Config;
+
 fn main() {
-    if let Err(e) = wcr::get_args().and_then(wcr::run) {
+    if let Err(e) = Config::get_args().and_then(|config| config.run()) {
         eprintln!("{}", e);
         std::process::exit(1);
     }

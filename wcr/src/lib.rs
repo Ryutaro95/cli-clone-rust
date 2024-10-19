@@ -28,51 +28,53 @@ pub struct Config {
     chars: bool,
 }
 
+impl Config {
+    pub fn get_args() -> MyResult<Self> {
+        let mut config = Config::parse();
+        if [config.lines, config.words, config.bytes, config.chars]
+            .iter()
+            .all(|v| v == &false)
+        {
+            config.lines = true;
+            config.words = true;
+            config.bytes = true;
+        }
+        Ok(config)
+    }
+
+    pub fn run(&self) -> MyResult<()> {
+        for filename in &self.files {
+            match open(filename) {
+                Err(err) => eprintln!("{}: {}", filename, err),
+                Ok(file) => {
+                    if let Ok(info) = count(file) {
+                        println!(
+                            "{}{}{}{}{}",
+                            format_field(info.num_lines, self.lines),
+                            format_field(info.num_words, self.words),
+                            format_field(info.num_bytes, self.bytes),
+                            format_field(info.num_chars, self.chars),
+                            if filename == "-" {
+                                "".to_string()
+                            } else {
+                                format!(" {}", filename)
+                            }
+                        );
+                    }
+                }
+            }
+        }
+
+        Ok(())
+    }
+}
+
 #[derive(Debug, PartialEq)]
 pub struct FileInfo {
     num_lines: usize,
     num_words: usize,
     num_bytes: usize,
     num_chars: usize,
-}
-
-pub fn get_args() -> MyResult<Config> {
-    let mut config = Config::parse();
-    if [config.lines, config.words, config.bytes, config.chars]
-        .iter()
-        .all(|v| v == &false)
-    {
-        config.lines = true;
-        config.words = true;
-        config.bytes = true;
-    }
-    Ok(config)
-}
-
-pub fn run(config: Config) -> MyResult<()> {
-    for filename in &config.files {
-        match open(filename) {
-            Err(err) => eprintln!("{}: {}", filename, err),
-            Ok(file) => {
-                if let Ok(info) = count(file) {
-                    println!(
-                        "{}{}{}{}{}",
-                        format_field(info.num_lines, config.lines),
-                        format_field(info.num_words, config.words),
-                        format_field(info.num_bytes, config.bytes),
-                        format_field(info.num_chars, config.chars),
-                        if filename == "-" {
-                            "".to_string()
-                        } else {
-                            format!(" {}", filename)
-                        }
-                    );
-                }
-            }
-        }
-    }
-
-    Ok(())
 }
 
 pub fn count(mut file: impl BufRead) -> MyResult<FileInfo> {
